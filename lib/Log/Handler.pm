@@ -1149,7 +1149,7 @@ use Log::Handler::Pattern;
 use UNIVERSAL;
 use base qw(Log::Handler::Levels);
 
-our $VERSION = "0.85";
+our $VERSION = "0.86";
 our $ERRSTR  = "";
 
 # $TRACE and $CALLER_LEVEL are both used as global

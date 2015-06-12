@@ -1,3 +1,6 @@
+0.86    Released at 2015-06-12.
+        - Quick fix for dateext and fileopen.
+
 0.85    Released at 2015-06-12.
         - Added parameter dateext to Output::File.
 

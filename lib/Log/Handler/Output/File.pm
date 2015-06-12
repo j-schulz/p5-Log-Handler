@@ -247,7 +247,10 @@ sub new {
     my $self = bless $opts, $class;
 
     # open the log file permanent
-    if ($self->{fileopen}) {
+    if ($self->{dateext}) {
+        $self->_check_dateext
+            or return undef;
+    } elsif ($self->{fileopen}) {
         $self->_open
             or croak $self->errstr;
     }
@@ -392,8 +395,10 @@ sub _check_dateext {
 
     if ($self->{filename} ne $filename) {
         $self->{filename} = $filename;
-        $self->close or return undef;
-        $self->_open or return undef;
+        if ($self->{fileopen}) {
+            $self->close or return undef;
+            $self->_open or return undef;
+        }
     }
 
     return 1;
