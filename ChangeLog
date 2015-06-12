@@ -1,3 +1,6 @@
+0.85    Released at 2015-06-12.
+        - Added parameter dateext to Output::File.
+
 0.84    Released at 2014-10-24.
         - Fixed some version conflicts.
 

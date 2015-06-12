@@ -143,6 +143,26 @@ L<http://perldoc.perl.org/perldiag.html#Malformed-UTF-8-character-(%25s)>
 
 L<http://perldoc.perl.org/Encode.html#UTF-8-vs.-utf8-vs.-UTF8>
 
+=item B<dateext>
+
+It's possible to set a pattern in the filename that is replaced with a date.
+If the date - and the filename - changed the file is closed and reopened with
+the new filename. The filename is converted with C<POSIX::strftime>.
+
+Example:
+
+    my $log = Log::Handler::Output::File->new(
+        filename  => "file-%Y-%m-%d.log",
+        dateext => 1
+    );
+
+In this example the file C<file-2015-06-12.log> is created. At the next day the filename
+changed, the log file C<file-2015-06-12.log> is closed and C<file-2015-06-13.log> is opened.
+
+This feature is a small improvement for systems where no logrotate is available like Windows
+systems. On this way you have the chance to delete old log files without to stop/start a
+daemon.
+
 =back
 
 =head2 log()
@@ -216,14 +236,15 @@ use Carp;
 use Fcntl qw( :flock O_WRONLY O_APPEND O_TRUNC O_EXCL O_CREAT );
 use File::Spec;
 use Params::Validate qw();
+use POSIX;
 
-our $VERSION = "0.07";
+our $VERSION = "0.08";
 our $ERRSTR  = "";
 
 sub new {
     my $class = shift;
-    my $opts  = $class->_validate(@_);
-    my $self  = bless $opts, $class;
+    my $opts = $class->_validate(@_);
+    my $self = bless $opts, $class;
 
     # open the log file permanent
     if ($self->{fileopen}) {
@@ -235,8 +256,12 @@ sub new {
 }
 
 sub log {
-    my $self    = shift;
+    my $self = shift;
     my $message = @_ > 1 ? {@_} : shift;
+
+    if ($self->{dateext}) {
+        $self->_check_dateext or return undef;
+    }
 
     if (!$self->{fileopen}) {
         $self->_open or return undef;
@@ -360,6 +385,20 @@ sub _open {
     return 1;
 }
 
+sub _check_dateext {
+    my $self = shift;
+
+    my $filename = POSIX::strftime($self->{filename_pattern}, localtime);
+
+    if ($self->{filename} ne $filename) {
+        $self->{filename} = $filename;
+        $self->close or return undef;
+        $self->_open or return undef;
+    }
+
+    return 1;
+}
+
 sub _checkino {
     my $self = shift;
 
@@ -419,6 +458,10 @@ sub _validate {
             regex => $bool_rx,
             default => 0,
         },
+        dateext => {
+            type => Params::Validate::SCALAR,
+            optional => 1
+        }
     });
 
     if (ref($opts{filename}) eq "ARRAY") {
@@ -434,6 +477,7 @@ sub _validate {
     }
 
     $opts{permissions} = oct($opts{permissions});
+    $opts{filename_pattern} = $opts{filename};
 
     return \%opts;
 }
