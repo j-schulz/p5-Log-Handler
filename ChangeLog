@@ -1,3 +1,9 @@
+0.88    Released at 2016-08-08.
+        - Just fixed meta data.
+
+0.87    Released at 2015-06-16.
+        - Implemented new option skip_message.
+
 0.86    Released at 2015-06-12.
         - Quick fix for dateext and fileopen.
 

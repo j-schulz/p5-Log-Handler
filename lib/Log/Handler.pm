@@ -572,6 +572,17 @@ NOTE that re-eval in regexes is not valid! Something like
 
 would cause an error!
 
+=item B<skip_message>
+
+This is the opposite of option C<filter_message>, but it's only possible to set
+a simple string or regular expression.
+
+    $log->add(file => {
+        filename => "file.log",
+        maxlevel => 6,
+        skip => '^do not log this.+$'
+    });
+
 =item B<category>
 
 The parameter C<category> works like C<filter_caller> but is much easier to configure.
@@ -1149,7 +1160,7 @@ use Log::Handler::Pattern;
 use UNIVERSAL;
 use base qw(Log::Handler::Levels);
 
-our $VERSION = "0.86";
+our $VERSION = "0.88";
 our $ERRSTR  = "";
 
 # $TRACE and $CALLER_LEVEL are both used as global
@@ -1681,6 +1692,10 @@ sub _build_params {
             type => Params::Validate::SCALAR,
             optional => 1,
         },
+        skip_message => {
+            type => Params::Validate::SCALAR,
+            optional => 1
+        },
         filter_message => {
             type => Params::Validate::SCALAR    # "foo"
                   | Params::Validate::SCALARREF # qr/foo/
@@ -1773,6 +1788,7 @@ sub _split_options {
         filter
         filter_message
         filter_caller
+        skip_message
         except_caller
         maxlevel
         message_layout

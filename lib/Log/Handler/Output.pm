@@ -43,7 +43,7 @@ use warnings;
 use Carp;
 use UNIVERSAL;
 
-our $VERSION = "0.09";
+our $VERSION = "0.10";
 our $ERRSTR  = "";
 
 sub new {
@@ -86,6 +86,10 @@ sub log {
 
     if ($self->{debug_trace} || $Log::Handler::TRACE) {
         $self->_add_trace($message);
+    }
+
+    if ($self->{skip_message} && $message->{message} =~ /$self->{skip_message}/) {
+        return 1;
     }
 
     if ($self->{filter_message}) {
