@@ -346,7 +346,7 @@ placeholders in C<printf()> style. The available placeholders are:
     %S   Program name
     %C   Caller - filename and line number
     %p   Caller - package name
-	%f   Caller - file name
+    %f   Caller - file name
     %l   Caller - line number
     %s   Caller - subroutine name
     %r   Runtime in seconds since program start
