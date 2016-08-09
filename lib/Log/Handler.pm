@@ -346,7 +346,7 @@ placeholders in C<printf()> style. The available placeholders are:
     %S   Program name
     %C   Caller - filename and line number
     %p   Caller - package name
-    %f   Caller - file name
+	%f   Caller - file name
     %l   Caller - line number
     %s   Caller - subroutine name
     %r   Runtime in seconds since program start
@@ -505,7 +505,7 @@ write operations.
     0 - to disable it
     1 - to enable it
 
-If you set C<die_on_errors> to 0 then you have to controll it yourself.
+If you set C<die_on_errors> to 0 then you have to control it yourself.
 
     $log->info("info message") or die $log->errstr();
 
@@ -517,7 +517,7 @@ If you set C<die_on_errors> to 0 then you have to controll it yourself.
 
 This option is set to 1 by default.
 
-Take a look to the decription of the method C<reload> for more
+Take a look to the description of the method C<reload> for more
 information about this option.
 
 =item B<filter_message>
